@@ -1,73 +1,79 @@
 import javax.swing.*;
 import java.awt.*;
 
-class Figure extends JComponent
-{
-    private static final long serialVersionUID = 1L;
-    private Color color;
-    private int type;
-    private String text;
-    Figure(Color color, int type, String text) {
-        this.color = color;
-        this.type = type;
-        this.text = text;
-    }
+import java.awt.event.ItemEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ActionListener;
 
-    public void paintComponent(Graphics g) {
-        // прорисовка фигуры
-        g.setColor(color);
-        switch (type) {
-            case 0 -> {
-                g.setColor(Color.black);
-                g.fillOval(0, 0, this.getBounds().width, this.getBounds().height);
-                g.setColor(color);
-                g.fillOval(2, 2, this.getBounds().width-4, this.getBounds().height-4);
-            }
-            case 1 -> {
-                g.setColor(Color.black);
-                g.fillRect(0, 0, this.getBounds().width, this.getBounds().height);
-                g.setColor(color);
-                g.fillRect(2, 2, this.getBounds().width-4, this.getBounds().height-4);
-            }
-        }
-        g.setColor(Color.yellow);
-        g.drawString(text, (this.getBounds().width/2)-(text.length()*3), this.getBounds().height/2);
-    }
-}
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+
 
 public class JLayeredPaneTest extends JFrame
 {
     private static final long serialVersionUID = 1L;
 
+
+    public Figure[] initFigure(JLayeredPane lp)
+    {
+        Figure[] massFigure = new Figure[3];
+
+        massFigure[0] = new Figure(Color.red , 0, "Figure popup top app pap pop pep");
+        massFigure[1] = new Figure(Color.blue, 0, "Figure 1");
+        massFigure[2] = new Figure(Color.cyan, 1, "Figure popup top app pap pop pep");
+
+        massFigure[0].setBounds(100, 400, 120, 120);
+        massFigure[1].setBounds(200, 240, 160, 180);
+        massFigure[2].setBounds(150, 550, 500, 300);
+
+        lp.add(massFigure[0], JLayeredPane.POPUP_LAYER  );
+        lp.add(massFigure[1], JLayeredPane.PALETTE_LAYER);
+        lp.add(massFigure[2], JLayeredPane.PALETTE_LAYER);
+
+
+        return(massFigure);
+    }
     public JLayeredPaneTest()
     {
         // создание окна
         super("Example LayeredTest");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // определение многослойной панели
         JLayeredPane lp = getLayeredPane();
 
-        Figure figure1 = new Figure(Color.red , 0, "Figure popup top app pap pop pep");
-        Figure figure2 = new Figure(Color.blue, 0, "Figure 1");
-        Figure figure3 = new Figure(Color.cyan, 1, "Figure popup top app pap pop pep");
+        Figure[] massFigure = new Figure[3];
 
-        figure1.setBounds(10, 40, 120, 120);
-        figure2.setBounds(60, 120, 160, 180);
-        figure3.setBounds(90, 55, 500, 300);
-        // добавление фигур в различные слои
-        lp.add(figure1, JLayeredPane.POPUP_LAYER  );
-        lp.add(figure2, JLayeredPane.PALETTE_LAYER);
-        lp.add(figure3, JLayeredPane.PALETTE_LAYER);
-        // смена позиции одной из фигур
-//        lp.setPosition(figure3, 0);
-        figure1.setLocation(100,100);
+        massFigure = initFigure(lp);
+
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout( FlowLayout.LEFT, 10, 10));
+
+
+
+        // Изменение выравнивания текста и изображения
+        JButton button = new JButton("Кнопка тест");
+        button.setMargin                (new Insets(10, 10, 10, 10));
+        button.setVerticalAlignment     (SwingConstants.TOP   );
+        button.setHorizontalAlignment   (SwingConstants.RIGHT );
+        button.setHorizontalTextPosition(SwingConstants.LEFT  );
+        button.setVerticalTextPosition  (SwingConstants.BOTTOM);
+        button.setIconTextGap(10);
+        // сделаем кнопку большой, чтобы увидеть выравнивание
+        button.setPreferredSize(new Dimension(300, 100));
+        button.addActionListener(new TestActionListener());
+        container.add(button);
+
         // определение размера и открытие окна
         setSize(500, 500);
         setVisible(true);
-        JButton newButton = new JButton();
-        getContentPane().add(newButton);
     }
 
+    class TestActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(e.toString());
+        }
+    }
     public static void main(String[] args)
     {
         JFrame.setDefaultLookAndFeelDecorated(true);
