@@ -13,67 +13,101 @@ import javax.swing.event.ChangeListener;
 
 public class JLayeredPaneTest extends JFrame
 {
-    private static final long serialVersionUID = 1L;
+    Figure[] massFigureTic = new Figure[9];
+    Figure[] massFigureTac = new Figure[9];
+    JButton[] massButtons = new JButton[9];
+    JLayeredPane lp = getLayeredPane();
 
+    public Figure[] initFigure(Figure[] massFigure, boolean ifTic) {
+        if (ifTic)
+        {
+            for (int i = 0; i < massFigure.length; i++) massFigure[i] = new Figure( 0);
 
-    public Figure[] initFigure(JLayeredPane lp)
-    {
-        Figure[] massFigure = new Figure[3];
+        }
+        else
+        {
+            for (int i = 0; i < massFigure.length; i++) massFigure[i] = new Figure( 1);
+        }
+        massFigure[0].setBounds(1, 25, 100, 100);
+        massFigure[1].setBounds(1, 125, 100, 100);
+        massFigure[2].setBounds(1, 225, 100, 100);
 
-        massFigure[0] = new Figure(Color.red , 0, "Figure popup top app pap pop pep");
-        massFigure[1] = new Figure(Color.blue, 0, "Figure 1");
-        massFigure[2] = new Figure(Color.cyan, 1, "Figure popup top app pap pop pep");
+        massFigure[3].setBounds(100, 25, 100, 100);
+        massFigure[4].setBounds(100, 125, 100, 100);
+        massFigure[5].setBounds(100, 225, 100, 100);
 
-        massFigure[0].setBounds(100, 400, 120, 120);
-        massFigure[1].setBounds(200, 240, 160, 180);
-        massFigure[2].setBounds(150, 550, 500, 300);
+        massFigure[6].setBounds(200, 25, 100, 100);
+        massFigure[7].setBounds(200, 125, 100, 100);
+        massFigure[8].setBounds(200, 225, 100, 100);
 
-        lp.add(massFigure[0], JLayeredPane.POPUP_LAYER  );
-        lp.add(massFigure[1], JLayeredPane.PALETTE_LAYER);
-        lp.add(massFigure[2], JLayeredPane.PALETTE_LAYER);
-
+        for (Figure figure : massFigure) lp.add(figure, JLayeredPane.POPUP_LAYER);
+        for (Figure figure : massFigure) figure.setVisible(false);
 
         return(massFigure);
     }
+
+    public JButton[] initButtons(JButton[] buttons)
+        {
+            for (int i = 0; i < buttons.length; i++) {
+                buttons[i] = new JButton();
+                buttons[i].setBorderPainted(false);
+                buttons[i].setBackground(Color.white);
+                buttons[i].setPreferredSize(new Dimension(100, 100));
+                buttons[i].setActionCommand(Integer.toString(i));
+                buttons[i].addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        int number = Integer.parseInt(e.getActionCommand());
+                        massFigureTic[number].setVisible(true);
+                        buttons[number].setVisible(false);
+                    } catch (NumberFormatException f) {
+                        System.out.println("Invalid integer input in actionListener in buttons");
+                    }
+                }
+                });
+                lp.add(buttons[i],JLayeredPane.DEFAULT_LAYER);
+                }
+
+            buttons[0].setBounds(1, 25, 100, 100);
+            buttons[1].setBounds(1, 125, 100, 100);
+            buttons[2].setBounds(1, 225, 100, 100);
+
+            buttons[3].setBounds(100, 25, 100, 100);
+            buttons[4].setBounds(100, 125, 100, 100);
+            buttons[5].setBounds(100, 225, 100, 100);
+
+            buttons[6].setBounds(200, 25, 100, 100);
+            buttons[7].setBounds(200, 125, 100, 100);
+            buttons[8].setBounds(200, 225, 100, 100);
+            return buttons;
+        }
+
+
     public JLayeredPaneTest()
     {
         // создание окна
         super("Example LayeredTest");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        JLayeredPane lp = getLayeredPane();
 
-        Figure[] massFigure = new Figure[3];
+        massFigureTic = initFigure(massFigureTic, true);
+        massFigureTac = initFigure(massFigureTac, false);
 
-        massFigure = initFigure(lp);
-
-        Container container = getContentPane();
-        container.setLayout(new FlowLayout( FlowLayout.LEFT, 10, 10));
-
+        massButtons = initButtons(massButtons);
 
 
         // Изменение выравнивания текста и изображения
-        JButton button = new JButton("Кнопка тест");
-        button.setMargin                (new Insets(10, 10, 10, 10));
-        button.setVerticalAlignment     (SwingConstants.TOP   );
-        button.setHorizontalAlignment   (SwingConstants.RIGHT );
-        button.setHorizontalTextPosition(SwingConstants.LEFT  );
-        button.setVerticalTextPosition  (SwingConstants.BOTTOM);
-        button.setIconTextGap(10);
-        // сделаем кнопку большой, чтобы увидеть выравнивание
-        button.setPreferredSize(new Dimension(300, 100));
-        button.addActionListener(new TestActionListener());
-        container.add(button);
 
-        // определение размера и открытие окна
-        setSize(500, 500);
+
+        //Белый бэкграунд
+        Figure foreground = new Figure(2);
+        foreground.setBounds(0,25,500,500);
+        lp.add(foreground, 2);
+
+        setSize(310, 335);
         setVisible(true);
     }
 
-    class TestActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            System.out.println(e.toString());
-        }
-    }
     public static void main(String[] args)
     {
         JFrame.setDefaultLookAndFeelDecorated(true);

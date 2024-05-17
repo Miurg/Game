@@ -6,33 +6,30 @@ class Figure extends JComponent
 {
     @Serial
     private static final long serialVersionUID = 1L;
-    private Color color;
-    private int type;
-    private String text;
-    Figure(Color color, int type, String text) {
-        this.color = color;
+
+    private final int type;
+
+
+    Figure(int type) {
         this.type = type;
-        this.text = text;
     }
 
     public void paintComponent(Graphics g) {
         // прорисовка фигуры
-        g.setColor(color);
         switch (type) {
             case 0 -> {
-                g.setColor(Color.black);
-                g.fillOval(0, 0, this.getBounds().width, this.getBounds().height);
-                g.setColor(color);
-                g.fillOval(2, 2, this.getBounds().width-4, this.getBounds().height-4);
+                ((Graphics2D) g).setStroke(new BasicStroke(2));
+                g.drawOval(1,1,this.getBounds().width-2, this.getBounds().height-2);
             }
             case 1 -> {
-                g.setColor(Color.black);
-                g.fillRect(0, 0, this.getBounds().width, this.getBounds().height);
-                g.setColor(color);
-                g.fillRect(2, 2, this.getBounds().width-4, this.getBounds().height-4);
+                ((Graphics2D) g).setStroke(new BasicStroke(2));
+                g.drawLine(1,1,100,100);
+                g.drawLine(100,1,1,100);
+            }
+            case 2 -> {
+                g.setColor(Color.WHITE);
+                g.fillRect(0,0,this.getBounds().width,this.getBounds().height);
             }
         }
-        g.setColor(Color.yellow);
-        g.drawString(text, (this.getBounds().width/2)-(text.length()*3), this.getBounds().height/2);
     }
 }
