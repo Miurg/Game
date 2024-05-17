@@ -16,6 +16,7 @@ public class JLayeredPaneTest extends JFrame
     Figure[] massFigureTic = new Figure[9];
     Figure[] massFigureTac = new Figure[9];
     JButton[] massButtons = new JButton[9];
+    boolean tickers = true;
     JLayeredPane lp = getLayeredPane();
 
     public Figure[] initFigure(Figure[] massFigure, boolean ifTic) {
@@ -59,7 +60,16 @@ public class JLayeredPaneTest extends JFrame
                 public void actionPerformed(ActionEvent e) {
                     try {
                         int number = Integer.parseInt(e.getActionCommand());
-                        massFigureTic[number].setVisible(true);
+                        if (tickers)
+                        {
+                            massFigureTic[number].setVisible(true);
+                            tickers = false;
+                        }
+                        else
+                        {
+                            massFigureTac[number].setVisible(true);
+                            tickers = true;
+                        }
                         buttons[number].setVisible(false);
                     } catch (NumberFormatException f) {
                         System.out.println("Invalid integer input in actionListener in buttons");
