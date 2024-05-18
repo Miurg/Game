@@ -13,38 +13,23 @@ import javax.swing.event.ChangeListener;
 
 public class JLayeredPaneTest extends JFrame
 {
-    Figure[] massFigureTic = new Figure[9];
-    Figure[] massFigureTac = new Figure[9];
     JButton[] massButtons = new JButton[9];
-    boolean tickers = true;
+    int whichMove = 1;
     JLayeredPane lp = getLayeredPane();
+    int[] Pane = new int[9];
 
-    public Figure[] initFigure(Figure[] massFigure, boolean ifTic) {
-        if (ifTic)
-        {
-            for (int i = 0; i < massFigure.length; i++) massFigure[i] = new Figure( 0);
+    public void initFigure(int ifTic, int buttonNumber) {
 
-        }
-        else
-        {
-            for (int i = 0; i < massFigure.length; i++) massFigure[i] = new Figure( 1);
-        }
-        massFigure[0].setBounds(1, 25, 100, 100);
-        massFigure[1].setBounds(1, 125, 100, 100);
-        massFigure[2].setBounds(1, 225, 100, 100);
+        if (ifTic == 10) ifTic = 0;
+        Figure figure = new Figure(ifTic);
 
-        massFigure[3].setBounds(100, 25, 100, 100);
-        massFigure[4].setBounds(100, 125, 100, 100);
-        massFigure[5].setBounds(100, 225, 100, 100);
-
-        massFigure[6].setBounds(200, 25, 100, 100);
-        massFigure[7].setBounds(200, 125, 100, 100);
-        massFigure[8].setBounds(200, 225, 100, 100);
-
-        for (Figure figure : massFigure) lp.add(figure, JLayeredPane.POPUP_LAYER);
-        for (Figure figure : massFigure) figure.setVisible(false);
-
-        return(massFigure);
+        Figure figureRect = new Figure(2);
+        figure.setBounds(massButtons[buttonNumber].getBounds().x, massButtons[buttonNumber].getBounds().y,
+                massButtons[buttonNumber].getBounds().width, massButtons[buttonNumber].getBounds().height);
+        figureRect.setBounds(massButtons[buttonNumber].getBounds().x, massButtons[buttonNumber].getBounds().y,
+                massButtons[buttonNumber].getBounds().width, massButtons[buttonNumber].getBounds().height);
+        lp.add(figure, JLayeredPane.POPUP_LAYER);
+        lp.add(figureRect, JLayeredPane.POPUP_LAYER);
     }
 
     public JButton[] initButtons(JButton[] buttons)
@@ -55,26 +40,28 @@ public class JLayeredPaneTest extends JFrame
                 buttons[i].setBackground(Color.white);
                 buttons[i].setPreferredSize(new Dimension(100, 100));
                 buttons[i].setActionCommand(Integer.toString(i));
-                buttons[i].addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
+                buttons[i].addActionListener(e -> {
                     try {
-                        int number = Integer.parseInt(e.getActionCommand());
-                        if (tickers)
+                        int numberButton = Integer.parseInt(e.getActionCommand());
+
+                        if (whichMove == 1)
                         {
-                            massFigureTic[number].setVisible(true);
-                            tickers = false;
+                            Pane[numberButton] = 1;
+                            logicTicTacToe();
+                            whichMove = 10;
                         }
                         else
                         {
-                            massFigureTac[number].setVisible(true);
-                            tickers = true;
+
+                            Pane[numberButton] = 10;
+                            logicTicTacToe();
+                            whichMove = 1;
                         }
-                        buttons[number].setVisible(false);
+                        initFigure(whichMove, numberButton);
+                        buttons[numberButton].setVisible(false);
                     } catch (NumberFormatException f) {
                         System.out.println("Invalid integer input in actionListener in buttons");
                     }
-                }
                 });
                 lp.add(buttons[i],JLayeredPane.DEFAULT_LAYER);
                 }
@@ -93,31 +80,48 @@ public class JLayeredPaneTest extends JFrame
             return buttons;
         }
 
-
+    private void centerLocationWindow() throws HeadlessException {
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int x = (screenSize.width - this.getWidth()) / 2;
+        final int y = (screenSize.height - this.getHeight()) / 2;
+        this.setLocation(x, y);
+    }
     public JLayeredPaneTest()
     {
         // создание окна
         super("Example LayeredTest");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        massFigureTic = initFigure(massFigureTic, true);
-        massFigureTac = initFigure(massFigureTac, false);
-
         massButtons = initButtons(massButtons);
 
-
-        // Изменение выравнивания текста и изображения
-
-
-        //Белый бэкграунд
-        Figure foreground = new Figure(2);
-        foreground.setBounds(0,25,500,500);
-        lp.add(foreground, 2);
+//        Figure foreground = new Figure(2);
+//        foreground.setBounds(0,25,getWidth(),getHeight());
+//        lp.add(foreground, 2);
 
         setSize(310, 335);
         setVisible(true);
+        centerLocationWindow();
+        setResizable(false);
     }
 
+    private void logicTicTacToe() {
+        //Can be a logic but TicTacToe pretty obvious in it, and this is just shorter
+        if ((Pane[0] + Pane[1] + Pane[2]) == whichMove * 3
+                || Pane[3]+Pane[4]+Pane[5] == whichMove * 3
+                || Pane[6]+Pane[7]+Pane[8] == whichMove * 3
+                || Pane[0]+Pane[4]+Pane[8] == whichMove * 3
+                || Pane[2]+Pane[4]+Pane[6] == whichMove * 3
+                || Pane[0]+Pane[3]+Pane[6] == whichMove * 3
+                || Pane[1]+Pane[4]+Pane[7] == whichMove * 3
+                || Pane[2]+Pane[5]+Pane[8] == whichMove * 3)
+        {
+            for (JButton massButton : massButtons) {
+                massButton.setVisible(false);
+            }
+            System.out.println("Победитель " + whichMove);
+        }
+    }
     public static void main(String[] args)
     {
         JFrame.setDefaultLookAndFeelDecorated(true);
