@@ -1,13 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ActionListener;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 
 
@@ -66,17 +59,17 @@ public class JLayeredPaneTest extends JFrame
                 lp.add(buttons[i],JLayeredPane.DEFAULT_LAYER);
                 }
 
-            buttons[0].setBounds(1, 25, 100, 100);
-            buttons[1].setBounds(1, 125, 100, 100);
-            buttons[2].setBounds(1, 225, 100, 100);
+            buttons[0].setBounds(1, 0, 100, 100);
+            buttons[1].setBounds(1, 100, 100, 100);
+            buttons[2].setBounds(1, 200, 100, 100);
 
-            buttons[3].setBounds(100, 25, 100, 100);
-            buttons[4].setBounds(100, 125, 100, 100);
-            buttons[5].setBounds(100, 225, 100, 100);
+            buttons[3].setBounds(100, 0, 100, 100);
+            buttons[4].setBounds(100, 100, 100, 100);
+            buttons[5].setBounds(100, 200, 100, 100);
 
-            buttons[6].setBounds(200, 25, 100, 100);
-            buttons[7].setBounds(200, 125, 100, 100);
-            buttons[8].setBounds(200, 225, 100, 100);
+            buttons[6].setBounds(200, 0, 100, 100);
+            buttons[7].setBounds(200, 100, 100, 100);
+            buttons[8].setBounds(200, 200, 100, 100);
             return buttons;
         }
 
@@ -94,10 +87,6 @@ public class JLayeredPaneTest extends JFrame
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         massButtons = initButtons(massButtons);
-
-//        Figure foreground = new Figure(2);
-//        foreground.setBounds(0,25,getWidth(),getHeight());
-//        lp.add(foreground, 2);
 
         setSize(310, 335);
         setVisible(true);
@@ -124,7 +113,6 @@ public class JLayeredPaneTest extends JFrame
     }
     public static void main(String[] args)
     {
-        JFrame.setDefaultLookAndFeelDecorated(true);
         new JLayeredPaneTest();
     }
 }

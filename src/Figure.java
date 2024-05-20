@@ -1,11 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 
 class Figure extends JComponent
 {
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private final int type;
 
